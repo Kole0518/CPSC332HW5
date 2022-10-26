@@ -4,9 +4,17 @@
     margin: 0;
 }
 
-canvas
+#startMenu
+{
+    background: orange;
+    position: absolute;
+    color: black;
+}
+
+#myCanvas
 {
     background: #eee;
+    position: absolute;
     display: block;
-    margin: 0 auto;
+    margin: auto;
 }
