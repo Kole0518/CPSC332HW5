@@ -4,17 +4,30 @@
     margin: 0;
 }
 
-#startMenu
+#menuContainer
 {
-    background: orange;
-    position: absolute;
-    color: black;
+    background: #eee;
+    margin: 1rem;
+    padding: 0.7rem;
+}
+
+#menuContainer legend
+{
+    text-align: center;
+    padding: 0.4rem;
+}
+
+button
+{
+    padding: 0.2rem;
+    border: 1px solid darkgray;
+    border-radius: 0.2rem;
+    background-color: #0095DD;
 }
 
 #myCanvas
 {
     background: #eee;
-    position: absolute;
     display: block;
     margin: auto;
 }

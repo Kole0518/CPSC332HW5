@@ -231,9 +231,11 @@ window.onload = function ()
     }
 
     //function used to set shadow properties
-    function setShadow()
-    {
-
+    function setShadow() {
+        context.shadowBlur = 10;
+        context.shadowOffsetX = 5;
+        context.shadowOffsetY = 5;
+        context.shadowColor = "black";
     };
 
     //function used to reset shadow properties to 'normal'
