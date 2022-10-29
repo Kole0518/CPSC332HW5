@@ -244,13 +244,18 @@ window.onload = function ()
     {
         //draw the rectangle menu backdrop
         context.fillStyle("royalblue");
-        context.fillRect(460, 0, 300, 0)
+        context.fillRect(460, 0, 300, 0);
 
         //draw the menu header
+        context.fillText("Breakout Gaming!");
 
         //start game button area
+        let startButton = context.fillRect(230, 120, 75, 20);
 
         //event listener for clicking start
+        startButton.addEventListener("click", function() {
+
+        });
         //need to add it here because the menu should be able to come back after 
         //we remove the it later                
     }
@@ -267,7 +272,10 @@ window.onload = function ()
     //function used to reset shadow properties to 'normal'
     function resetShadow()
     {
-
+        context.shadowBlur = 0;
+        context.shadowOffsetX = 0;
+        context.shadowOffsetY = 0;
+        context.shadowColor = null;
     };
 
     //function to clear the menu when we want to start the game
@@ -324,9 +332,13 @@ window.onload = function ()
     //function to reset starting game info
     function resetBoard(resetLives)
     {
-        //reset paddle position
-        //reset bricks               
-        //reset score and lives               
+        context.clearRect(0, 0, canvas.width, canvas.height);
+        drawBricks();
+        drawBall();
+        drawPaddle();
+        drawScore();
+        drawHighScore();
+        drawLives();            
     };
 
     //draw the menu.
