@@ -8,6 +8,12 @@ window.onload = function ()
     let x = canvas.width / 2;
     let y = canvas.height - 30;
 
+    // start button values
+    let startButtonX = canvas.width / 2 - 35;
+    let startButtonY = canvas.height / 2 - 30;
+    let startButtonWidth = 75;
+    let startButtonHeight = 45;
+
     // paused bool
     let isPaused = false
     
@@ -38,7 +44,7 @@ window.onload = function ()
 
     // game stat values
     let score = 0;
-    let lives = 99;
+    let lives = 3;
     let highSchore = 0;
 
     let bricks = [];
@@ -55,12 +61,6 @@ window.onload = function ()
     document.addEventListener("keydown", keyDownHandler, false);
     document.addEventListener("keyup", keyUpHandler, false);
     document.addEventListener("mousemove", mouseMoveHandler, false);
-
-    ballSpeed.addEventListener("input", () => {
-        ballSpeedLabel.innerHTML = ballSpeed.value;
-        dx = ballSpeed.value;
-        dy = -ballSpeed.value;
-    });
 
     function keyDownHandler(e)
     {
@@ -243,19 +243,29 @@ window.onload = function ()
     function drawMenu()
     {
         //draw the rectangle menu backdrop
-        context.fillStyle("royalblue");
-        context.fillRect(460, 0, 300, 0);
+        context.fillStyle = "royalblue"
+        setShadow();
+        context.fillRect(15, 15, 450, 290);
 
         //draw the menu header
-        context.fillText("Breakout Gaming!");
+        context.font = "bold 25pt Arial";
+        context.fillStyle = "black";
+        context.textAlign = "center";
+        setShadow();
+        context.fillText("BREAKOUT GAMING!", canvas.width / 2, 80);
 
         //start game button area
-        let startButton = context.fillRect(230, 120, 75, 20);
+        context.fillStyle = "magenta";
+        context.fillRect(startButtonX, startButtonY, startButtonWidth, startButtonHeight);
+        context.font = "bold 20pt Arial";
+        context.fillStyle = "gray";
+        context.textAlign = "center";
+        setShadow();
+
+        context.fillText("Start", canvas.width / 2, canvas.height / 2);
 
         //event listener for clicking start
-        startButton.addEventListener("click", function() {
-
-        });
+        canvas.addEventListener("click", startGameClick);
         //need to add it here because the menu should be able to come back after 
         //we remove the it later                
     }
@@ -282,7 +292,9 @@ window.onload = function ()
     function clearMenu()
     {
         //remove event listener for menu, 
-        //we don't want to trigger the start game click event during a game                
+        //we don't want to trigger the start game click event during a game
+        canvas.removeEventListener("click", startGameClick);
+        context.clearRect(0, 0, canvas.width, canvas.height);                
     }
 
     //function to start the game
@@ -291,14 +303,27 @@ window.onload = function ()
     //if so, we want to trigger the draw(); function to start our game
     function startGameClick(event)
     {
+        var valX = event.pageX - canvas.offsetLeft;
+        var valY = event.pageY - canvas.offsetTop;
 
+        if (valX > startButtonY && valX > startButtonX && valY < (startButtonY + startButtonHeight) && valX < (startButtonX + startButtonWidth))
+        {
+            clearMenu();
+            resetShadow();
+            draw();
+        }
     };
 
     //function to handle game speed adjustments when we move our slider
     function adjustGameSpeed()
     {
         //update the slider display                
-        //update the game speed multiplier                
+        //update the game speed multiplier  
+        ballSpeed.addEventListener("input", () => {
+            ballSpeedLabel.innerHTML = ballSpeed.value;
+            dx = ballSpeed.value;
+            dy = -ballSpeed.value;
+        });              
     };
 
     //function to toggle the play/paused game state
@@ -313,12 +338,26 @@ window.onload = function ()
     //if we lose, we want to draw a losing message to the canvas
     function checkWinState()
     {
+        if (score == brickRowCount * brickColumnCount) // win
+        {
+            drawHighScore();
 
+            context.fillStyle("white");
+            context.fillRect(460, 0, 300, 0);
+            context.fillText("YOU WIN!!!!!!!!!!");
+        }
+        else
+        {
+            context.fillStyle("white");
+            context.fillRect(460, 0, 300, 0);
+            context.fillText("YOU LOST!!!!!!!!!!");
+        }
     };
 
     //function to clear the board state and start a new game (no high score accumulation)
     function startNewGame(resetScore)
     {
+        resetScore = 0;
 
     };
 
@@ -332,6 +371,7 @@ window.onload = function ()
     //function to reset starting game info
     function resetBoard(resetLives)
     {
+        resetLives = lives;
         context.clearRect(0, 0, canvas.width, canvas.height);
         drawBricks();
         drawBall();
@@ -343,6 +383,6 @@ window.onload = function ()
 
     //draw the menu.
     //we don't want to immediately draw... only when we click start game            
-    draw();
+    drawMenu();
 
 };//end window.onload function
