@@ -80,7 +80,7 @@ window.onload = function ()
             togglePauseGame();
         }
     });
-    newGameButton.addEventListener("click", startNewGame(highScore));
+    newGameButton.addEventListener("click", startNewGame(true));
     continueGameButton.addEventListener("click", continuePlaying);
     reloadGameButton.addEventListener("click", function()
     {
@@ -122,6 +122,10 @@ window.onload = function ()
                         dy = -dy;
                         b.status = 0;
                         score++;
+                        if (score > highScore)
+                        {
+                            highScore++;
+                        }
                         if (score == brickRowCount * brickColumnCount)
                         {
                             //TODO: draw message on the canvas
@@ -259,7 +263,9 @@ window.onload = function ()
     //Drawing a high score
     function drawHighScore()
     {
-        highScore = score;
+        context.font = "16px Arial";
+        context.fillStyle = color1;
+        context.fillText("High Score: " + highScore, canvas.width / 2, 20);
     }
 
     //draw the menu screen, including labels and button
@@ -381,7 +387,35 @@ window.onload = function ()
     //function to clear the board state and start a new game (no high score accumulation)
     function startNewGame(resetScore)
     {
+        if (resetScore == true)
+        {
+            // clear canvas
+            context.clearRect(0, 0, canvas.width, canvas.height);
 
+            //reset paddle position
+            x = canvas.width / 2;
+            y = canvas.height - 30;
+            dx = 2;
+            dy = -2;
+            paddleX = (canvas.width - paddleWidth) / 2;
+
+            // reset game stats
+            score = 0;
+            highScore = 0;
+
+            // brick spawner
+            for (let c = 0; c < brickColumnCount; c++)
+            {
+                bricks[c] = [];
+                for (let r = 0; r < brickRowCount; r++)
+                    bricks[c][r] = { x: 0, y: 0, status: 1 };
+            }
+
+            if (isPaused == true)
+            {
+                togglePauseGame();
+            }
+        }
     };
 
     //function to reset the board and continue playing (accumulate high score)
@@ -418,7 +452,7 @@ window.onload = function ()
             lives = maxLives;
         }
 
-            // brick spawner
+        // brick spawner
         for (let c = 0; c < brickColumnCount; c++)
         {
             bricks[c] = [];
@@ -426,8 +460,10 @@ window.onload = function ()
                 bricks[c][r] = { x: 0, y: 0, status: 1 };
         }
 
-        togglePauseGame();
-
+        if (isPaused == true)
+        {
+            togglePauseGame();
+        }
         //reset game pieces
         draw();
     };
