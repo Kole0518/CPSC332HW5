@@ -18,10 +18,10 @@ window.onload = function ()
     let isPaused = false
     
     // ball values
-    let ballSpeed = document.getElementById("gameSpeed");
+    let ballSpeedMultiplier = document.getElementById("gameSpeed");
     let ballSpeedLabel = document.getElementById("labelSpeed");
-    let dx = ballSpeed.value;
-    let dy = -ballSpeed.value;
+    let dx = 3;
+    let dy = 3;
     let ballRadius = 10;
 
     // paddle values
@@ -61,6 +61,8 @@ window.onload = function ()
     document.addEventListener("keydown", keyDownHandler, false);
     document.addEventListener("keyup", keyUpHandler, false);
     document.addEventListener("mousemove", mouseMoveHandler, false);
+
+    ballSpeedMultiplier.addEventListener("input", adjustGameSpeed);
 
     function keyDownHandler(e)
     {
@@ -212,8 +214,10 @@ window.onload = function ()
         y += dy;
 
         //TODO: pause game check
-
-        requestAnimationFrame(draw);
+        if (isPaused == false)
+        {
+            requestAnimationFrame(draw);
+        }
     }
 
     /*
@@ -319,16 +323,15 @@ window.onload = function ()
     {
         //update the slider display                
         //update the game speed multiplier  
-        ballSpeed.addEventListener("input", () => {
-            ballSpeedLabel.innerHTML = ballSpeed.value;
-            dx = ballSpeed.value;
-            dy = -ballSpeed.value;
-        });              
+        ballSpeedLabel.innerHTML = ballSpeedMultiplier.value;
+        dx = 3 * ballSpeedMultiplier;
+        dy = 3 * ballSpeedMultiplier; 
     };
 
     //function to toggle the play/paused game state
     function togglePauseGame()
     {
+        isPaused = !isPaused
         //toggle state                
         //if we are not paused, we want to continue animating (hint: zyBook 8.9)
     };
@@ -338,19 +341,18 @@ window.onload = function ()
     //if we lose, we want to draw a losing message to the canvas
     function checkWinState()
     {
+        context.font = "bold 25pt Arial";
+        context.fillStyle = "black";
+        context.textAlign = "center";
+
         if (score == brickRowCount * brickColumnCount) // win
         {
             drawHighScore();
-
-            context.fillStyle("white");
-            context.fillRect(460, 0, 300, 0);
-            context.fillText("YOU WIN!!!!!!!!!!");
+            context.fillText("YOU WIN!!!!!!!!!!", canvas.width / 2, canvas.height / 2);
         }
         else
         {
-            context.fillStyle("white");
-            context.fillRect(460, 0, 300, 0);
-            context.fillText("YOU LOST!!!!!!!!!!");
+            context.fillText("YOU LOST!!!!!!!!!!", canvas.width / 2, canvas.height / 2);
         }
     };
 
