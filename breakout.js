@@ -44,8 +44,15 @@ window.onload = function ()
 
     // game stat values
     let score = 0;
+    const maxLives = 3;
     let lives = 3;
-    let highSchore = 0;
+    let highScore = 0;
+
+    // options menu buttons
+    let pauseGameButton = document.getElementById("gamePause");
+    let newGameButton = document.getElementById("newGame");
+    let continueGameButton = document.getElementById("continueGame");
+    let reloadGameButton = document.getElementById("gameReload");
 
     let bricks = [];
 
@@ -62,7 +69,23 @@ window.onload = function ()
     document.addEventListener("keyup", keyUpHandler, false);
     document.addEventListener("mousemove", mouseMoveHandler, false);
 
+    // ball speed slider listener
     ballSpeedMultiplier.addEventListener("input", adjustGameSpeed);
+
+    // options menu button listeners
+    pauseGameButton.addEventListener("click", function()
+    {
+        if (isPaused == false)
+        {
+            togglePauseGame();
+        }
+    });
+    newGameButton.addEventListener("click", startNewGame(highScore));
+    continueGameButton.addEventListener("click", continuePlaying);
+    reloadGameButton.addEventListener("click", function()
+    {
+        location.reload();
+    });
 
     function keyDownHandler(e)
     {
@@ -103,8 +126,6 @@ window.onload = function ()
                         {
                             //TODO: draw message on the canvas
                             checkWinState();
-                            //TODO: pause game instead of reloading
-                            togglePauseGame();
                         }
                     }
                 }
@@ -193,8 +214,6 @@ window.onload = function ()
                 {
                     //TODO: draw message on the canvas
                     checkWinState();
-                    //TODO: pause game instead of reloading
-                    togglePauseGame();
                 }
                 else {
                     x = canvas.width / 2;
@@ -240,14 +259,14 @@ window.onload = function ()
     //Drawing a high score
     function drawHighScore()
     {
-
+        highScore = score;
     }
 
     //draw the menu screen, including labels and button
     function drawMenu()
     {
         //draw the rectangle menu backdrop
-        context.fillStyle = "royalblue"
+        context.fillStyle = "royalblue";
         setShadow();
         context.fillRect(15, 15, 450, 290);
 
@@ -331,7 +350,7 @@ window.onload = function ()
     //function to toggle the play/paused game state
     function togglePauseGame()
     {
-        isPaused = !isPaused
+        isPaused = !isPaused;
         //toggle state                
         //if we are not paused, we want to continue animating (hint: zyBook 8.9)
     };
@@ -354,12 +373,14 @@ window.onload = function ()
         {
             context.fillText("YOU LOST!!!!!!!!!!", canvas.width / 2, canvas.height / 2);
         }
+
+        //TODO: pause game instead of reloading
+        togglePauseGame();
     };
 
     //function to clear the board state and start a new game (no high score accumulation)
     function startNewGame(resetScore)
     {
-        resetScore = 0;
 
     };
 
@@ -367,20 +388,48 @@ window.onload = function ()
     //should make sure we didn't lose before accumulating high score
     function continuePlaying()
     {
-
+        if (lives != maxLives)
+        {
+            resetBoard(true);
+        }
+        else
+        {
+            resetBoard(false);
+        }
     };
 
     //function to reset starting game info
     function resetBoard(resetLives)
-    {
-        resetLives = lives;
+    {   
+        // clear canvas
         context.clearRect(0, 0, canvas.width, canvas.height);
-        drawBricks();
-        drawBall();
-        drawPaddle();
-        drawScore();
-        drawHighScore();
-        drawLives();            
+
+        //reset paddle position
+        x = canvas.width / 2;
+        y = canvas.height - 30;
+        dx = 2;
+        dy = -2;
+        paddleX = (canvas.width - paddleWidth) / 2;
+
+        // reset game stats
+        score = 0;
+        if (resetLives == true)
+        {
+            lives = maxLives;
+        }
+
+            // brick spawner
+        for (let c = 0; c < brickColumnCount; c++)
+        {
+            bricks[c] = [];
+            for (let r = 0; r < brickRowCount; r++)
+                bricks[c][r] = { x: 0, y: 0, status: 1 };
+        }
+
+        togglePauseGame();
+
+        //reset game pieces
+        draw();
     };
 
     //draw the menu.
