@@ -1,4 +1,4 @@
-const color1 = "#0095DD";
+const color1 = "#e82adf";
 
 window.onload = function ()
 {
@@ -367,7 +367,7 @@ window.onload = function ()
     function checkWinState()
     {
         context.font = "bold 25pt Arial";
-        context.fillStyle = "black";
+        context.fillStyle = "ghostwhite";
         context.textAlign = "center";
 
         if (score == brickRowCount * brickColumnCount) // win
@@ -402,6 +402,7 @@ window.onload = function ()
             // reset game stats
             score = 0;
             highScore = 0;
+            lives = maxLives;
 
             // brick spawner
             for (let c = 0; c < brickColumnCount; c++)
